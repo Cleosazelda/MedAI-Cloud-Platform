@@ -1,7 +1,10 @@
 import os
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 import logging
+# pyrefly: ignore [missing-import]
 from flask import Flask, jsonify
 from flask_cors import CORS
+# pyrefly: ignore [missing-import]
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -43,6 +46,6 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    port = int(os.getenv('PORT', 5000))
+    port = int(os.getenv('PORT', 5001))
     # In production, use Gunicorn instead of Flask's built-in server.
     app.run(host='0.0.0.0', port=port, debug=(os.getenv('FLASK_ENV') == 'development'))

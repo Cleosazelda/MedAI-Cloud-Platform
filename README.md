@@ -1,14 +1,15 @@
 # Cloud Computing SDGs Health AI (MedAI Cloud Platform)
 
-MedAI Cloud Platform is a cloud-native healthcare application that utilizes AI (Google Gemini) to analyze patient symptoms and provide a preliminary diagnosis, suggested next steps, and recommended medical specialties. The platform is designed with a modern architecture, utilizing a React-like responsive UI (Vanilla JS + CSS), a Python/Flask API, and PostgreSQL for persistent data storage.
+MedAI Cloud Platform is a cloud-native healthcare application that utilizes AI (OpenAI API) to analyze patient symptoms and provide a preliminary diagnosis, suggested next steps, and recommended medical specialties. The platform is designed with a modern architecture, utilizing a React-like responsive UI (Vanilla JS + CSS), a Python/Flask API, PostgreSQL for persistent data storage, and Google Cloud Storage (GCS) for object storage.
 
 This project was built to align with the Sustainable Development Goals (SDGs) for Good Health and Well-being.
 
 ## Architecture & Tech Stack
 
 - **Frontend:** HTML5, CSS3 (Modern, Responsive, Glassmorphism), Vanilla JavaScript, Nginx (for serving static files and proxying API).
-- **Backend:** Python, Flask, Gunicorn, Google Generative AI (Gemini SDK).
+- **Backend:** Python, Flask, Gunicorn, OpenAI API SDK.
 - **Database:** PostgreSQL 15.
+- **Object Storage:** Google Cloud Storage (GCP) for storing AI diagnosis reports.
 - **Containerization:** Docker & Docker Compose.
 - **CI/CD:** GitHub Actions.
 
@@ -16,6 +17,7 @@ This project was built to align with the Sustainable Development Goals (SDGs) fo
 
 - [Docker](https://www.docker.com/products/docker-desktop/) and Docker Compose installed on your local machine.
 - A valid [Google Gemini API Key](https://aistudio.google.com/app/apikey).
+- Optional: GCP Service Account JSON (for Object Storage upload).
 
 ## Local Setup & Deployment Tutorial
 
@@ -30,12 +32,13 @@ This project was built to align with the Sustainable Development Goals (SDGs) fo
    ```bash
    cp backend/.env.example .env
    ```
-   - Open `.env` and fill in your Gemini API key:
+   - Open `.env` and fill in your Gemini API key and GCS Bucket name:
    ```env
    POSTGRES_USER=postgres
    POSTGRES_PASSWORD=password
    POSTGRES_DB=medai_db
    GEMINI_API_KEY=your_actual_api_key_here
+   GCS_BUCKET_NAME=your_bucket_name
    ```
 
 3. **Build and Run with Docker Compose**
@@ -51,7 +54,7 @@ This project was built to align with the Sustainable Development Goals (SDGs) fo
 
 5. **Usage**
    - Enter patient details and symptoms in the "New Diagnosis" section.
-   - Click "Analyze Symptoms". The backend will contact the Gemini API and save the results to the database.
+   - Click "Analyze Symptoms". The backend will contact the Gemini API, upload the report to GCS, and save the results to the database.
    - Go to "Consultation History" to view past records.
 
 6. **Stopping the Application**
@@ -70,7 +73,8 @@ This project was built to align with the Sustainable Development Goals (SDGs) fo
 │   │   └── api.py            # API Endpoints (diagnose, history, health)
 │   ├── services/
 │   │   ├── db_service.py     # PostgreSQL database logic
-│   │   └── gemini_service.py # Gemini AI integration logic
+│   │   ├── gemini_service.py # Gemini AI integration logic
+│   │   └── storage_service.py # GCP Cloud Storage logic
 │   ├── .env.example          # Template for backend env vars
 │   ├── app.py                # Main Flask application
 │   ├── Dockerfile            # Backend container instructions

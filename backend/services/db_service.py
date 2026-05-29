@@ -1,11 +1,17 @@
 import os
-import psycopg2
-from psycopg2.extras import RealDictCursor
+try:
+    import psycopg2
+    from psycopg2.extras import RealDictCursor
+except ImportError:
+    psycopg2 = None
+    RealDictCursor = None
 import logging
 
 logger = logging.getLogger(__name__)
 
 def get_db_connection():
+    if psycopg2 is None:
+        raise Exception("psycopg2 is not installed. Running in mock mode.")
     try:
         conn = psycopg2.connect(
             host=os.getenv('POSTGRES_HOST', 'localhost'),
@@ -19,16 +25,16 @@ def get_db_connection():
         logger.error(f"Database connection error: {e}")
         raise e
 
-def save_consultation(patient_name, patient_age, symptoms, ai_analysis):
+def save_consultation(patient_name, patient_age, symptoms, ai_analysis, report_url):
     try:
         conn = get_db_connection()
         cur = conn.cursor()
         query = """
-            INSERT INTO consultation_history (patient_name, patient_age, symptoms, ai_analysis)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO consultation_history (patient_name, patient_age, symptoms, ai_analysis, report_url)
+            VALUES (%s, %s, %s, %s, %s)
             RETURNING id, created_at;
         """
-        cur.execute(query, (patient_name, patient_age, symptoms, ai_analysis))
+        cur.execute(query, (patient_name, patient_age, symptoms, ai_analysis, report_url))
         result = cur.fetchone()
         conn.commit()
         cur.close()
@@ -43,7 +49,7 @@ def get_consultation_history(limit=50):
         conn = get_db_connection()
         cur = conn.cursor(cursor_factory=RealDictCursor)
         query = """
-            SELECT id, patient_name, patient_age, symptoms, ai_analysis, created_at 
+            SELECT id, patient_name, patient_age, symptoms, ai_analysis, report_url, created_at 
             FROM consultation_history 
             ORDER BY created_at DESC 
             LIMIT %s;
