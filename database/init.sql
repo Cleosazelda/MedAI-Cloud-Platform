@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS consultation_history (
     patient_age INT NOT NULL,
     symptoms TEXT NOT NULL,
     ai_analysis TEXT NOT NULL,
+    report_url VARCHAR(512),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 

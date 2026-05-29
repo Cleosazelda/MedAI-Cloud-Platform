@@ -1,6 +1,85 @@
+# =====================
+# Python / Flask
+# =====================
 venv/
+env/
+.venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.whl
+
+# =====================
+# Environment / Secrets
+# =====================
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+service-account*.json
+gcp-credentials*.json
+
+# =====================
+# Logs
+# =====================
+*.log
+logs/
+
+# =====================
+# Database
+# =====================
+*.sqlite3
+*.db
+*.sql.bak
+
+# =====================
+# macOS
+# =====================
 .DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+
+# =====================
+# IDE & Editor
+# =====================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =====================
+# Node / Frontend
+# =====================
 node_modules/
+npm-debug.log*
+yarn-error.log*
+.parcel-cache/
+
+# =====================
+# Docker
+# =====================
+.dockerignore
+
+# =====================
+# Testing / Coverage
+# =====================
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# =====================
+# Misc
+# =====================
+*.bak
+*.tmp

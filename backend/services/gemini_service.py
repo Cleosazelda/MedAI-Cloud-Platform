@@ -1,4 +1,5 @@
 import os
+# pyrefly: ignore [missing-import]
 import google.generativeai as genai
 import logging
 
@@ -15,7 +16,7 @@ def generate_diagnosis(patient_name, patient_age, symptoms):
     try:
         configure_gemini()
         # Initialize the model, prefer a capable model for health analysis
-        model = genai.GenerativeModel('gemini-1.5-pro-latest')
+        model = genai.GenerativeModel('gemini-2.0-flash')
         
         prompt = f"""
         You are a highly skilled AI medical assistant. Please analyze the following patient symptoms.
@@ -33,7 +34,7 @@ def generate_diagnosis(patient_name, patient_age, symptoms):
         2. Suggested next steps for the patient (e.g., rest, see a doctor, seek immediate emergency care).
         3. Relevant medical specialties the patient might want to consult.
         
-        Format your response clearly with headings.
+        Format your response clearly with headings using Markdown.
         """
         
         response = model.generate_content(prompt)
