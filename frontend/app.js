@@ -206,8 +206,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Pasang ulang click event listener untuk tombol view detail modal
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const id = parseInt(e.target.getAttribute('data-id'));
-                const record = consultationHistory.find(r => r.id === id);
+                const id = btn.getAttribute('data-id');
+                const record = consultationHistory.find(r => r.id == id);
                 if (record) openModal(record);
             });
         });
