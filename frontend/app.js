@@ -37,17 +37,25 @@ document.addEventListener('DOMContentLoaded', () => {
     setupModal();
 
     // 1. Navigation Logic
+    // 1. Navigation Logic
     function setupNavigation() {
         navItems.forEach(item => {
             item.addEventListener('click', () => {
-                // Remove active class from all
+                // Remove active class dan kembalikan gembok hidden ke semua section
                 navItems.forEach(nav => nav.classList.remove('active'));
-                sections.forEach(sec => sec.classList.remove('active'));
+                sections.forEach(sec => {
+                    sec.classList.remove('active');
+                    sec.classList.add('hidden'); // Sembunyikan semuanya dengan aman
+                });
 
-                // Add active to clicked
+                // Aktifkan dan buka gembok hidden khusus untuk section yang dipilih
                 item.classList.add('active');
                 const targetId = item.getAttribute('data-target');
-                document.getElementById(targetId).classList.add('active');
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                    targetSection.classList.remove('hidden'); // Cabut gembok hidden-nya Dit!
+                }
 
                 // If history section clicked, fetch data
                 if (targetId === 'history-section') {
