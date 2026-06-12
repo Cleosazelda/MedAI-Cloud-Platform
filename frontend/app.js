@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setupForm();
     setupModal();
 
-    // 1. Navigation Logic
+
     // 1. Navigation Logic
     function setupNavigation() {
         navItems.forEach(item => {
@@ -177,16 +177,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         historyTableBody.innerHTML = '';
         records.forEach(record => {
-            // Jika data item rusak/null, lewati agar loop tidak crash di tengah jalan
             if (!record) return;
 
             const tr = document.createElement('tr');
 
-            // 1. Amankan penanganan tanggal agar tidak corrupt/invalid
+            // 1. Sinkronkan format tanggal dari created_at database
             const dateObj = record.created_at ? new Date(record.created_at) : new Date();
             const date = isNaN(dateObj.getTime()) ? 'No Date' : dateObj.toLocaleDateString();
 
-            // 2. Berikan fallback string kosong jika ada field yang bernilai null
+            // 2. FIX PARAMETER: Gunakan patient_name dan patient_age sesuai skema database init.sql lo!
             const pName = record.patient_name || 'Unknown';
             const pAge = record.patient_age || '-';
             const pSymptoms = record.symptoms || 'No symptoms reported';
@@ -204,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
             historyTableBody.appendChild(tr);
         });
 
-        // Pasang ulang event listener untuk tombol view detail di setiap baris
+        // Pasang ulang click event listener untuk tombol view detail modal
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const id = parseInt(e.target.getAttribute('data-id'));
