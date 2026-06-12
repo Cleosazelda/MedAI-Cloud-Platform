@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // API Base URL - update this based on environment
     // Use relative path for production (Docker Compose networking) or localhost for dev
     const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
-    const API_URL = isLocal ? 'http://localhost:5002/api' : '/api';
+    const API_URL = isLocal && window.location.port !== '80' && window.location.port !== '' ? 'http://localhost:5000/api' : '/api';
 
     // DOM Elements
     const navItems = document.querySelectorAll('.nav-item');
@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             historyTableBody.innerHTML = `<tr><td colspan="5" class="text-center">Loading history...</td></tr>`;
 
-            const res = await fetch(`${API_URL}/history`);
+            const res = await fetch(`${API_URL}/history`, { cache: 'no-store' });
             const data = await res.json();
 
             if (!res.ok) throw new Error(data.error || 'Failed to fetch');
