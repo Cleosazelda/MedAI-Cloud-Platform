@@ -171,15 +171,23 @@ document.addEventListener('DOMContentLoaded', () => {
         records.forEach(record => {
             const tr = document.createElement('tr');
 
-            const date = new Date(record.created_at).toLocaleDateString();
+            // Amankan tanggal agar tidak crash
+            const dateObj = record.created_at ? new Date(record.created_at) : new Date();
+            const date = isNaN(dateObj.getTime()) ? 'No Date' : dateObj.toLocaleDateString();
+
+            // Amankan variabel string dari data undefined/null
+            const pName = record.patient_name || 'Unknown';
+            const pAge = record.patient_age || '-';
+            const pSymptoms = record.symptoms || 'No symptoms reported';
+            const rId = record.id || 0;
 
             tr.innerHTML = `
                 <td>${date}</td>
-                <td>${record.patient_name}</td>
-                <td>${record.patient_age}</td>
-                <td><div class="text-truncate" title="${record.symptoms}">${record.symptoms}</div></td>
+                <td>${pName}</td>
+                <td>${pAge}</td>
+                <td><div class="text-truncate" title="${pSymptoms}">${pSymptoms}</div></td>
                 <td>
-                    <button class="btn btn-small view-btn" data-id="${record.id}">View Details</button>
+                    <button class="btn btn-small view-btn" data-id="${rId}">View Details</button>
                 </td>
             `;
             historyTableBody.appendChild(tr);
@@ -188,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add event listeners to view buttons
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const id = parseInt(e.target.getAttribute('data-id'));
+                const id = parseInt(e.target.getAttribute('data-target') || e.target.getAttribute('data-id'));
                 const record = consultationHistory.find(r => r.id === id);
                 if (record) openModal(record);
             });
