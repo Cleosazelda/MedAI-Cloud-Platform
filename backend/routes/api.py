@@ -88,4 +88,4 @@ def history():
         return jsonify({
             "error": "Failed to fetch history (DB might be offline).", 
             "data": []
-        }), 200
+        }), 500
