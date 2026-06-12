@@ -169,13 +169,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         historyTableBody.innerHTML = '';
         records.forEach(record => {
+            // Jika data item rusak/null, lewati agar loop tidak crash di tengah jalan
+            if (!record) return;
+
             const tr = document.createElement('tr');
 
-            // Amankan tanggal agar tidak crash
+            // 1. Amankan penanganan tanggal agar tidak corrupt/invalid
             const dateObj = record.created_at ? new Date(record.created_at) : new Date();
             const date = isNaN(dateObj.getTime()) ? 'No Date' : dateObj.toLocaleDateString();
 
-            // Amankan variabel string dari data undefined/null
+            // 2. Berikan fallback string kosong jika ada field yang bernilai null
             const pName = record.patient_name || 'Unknown';
             const pAge = record.patient_age || '-';
             const pSymptoms = record.symptoms || 'No symptoms reported';
@@ -193,10 +196,10 @@ document.addEventListener('DOMContentLoaded', () => {
             historyTableBody.appendChild(tr);
         });
 
-        // Add event listeners to view buttons
+        // Pasang ulang event listener untuk tombol view detail di setiap baris
         document.querySelectorAll('.view-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const id = parseInt(e.target.getAttribute('data-target') || e.target.getAttribute('data-id'));
+                const id = parseInt(e.target.getAttribute('data-id'));
                 const record = consultationHistory.find(r => r.id === id);
                 if (record) openModal(record);
             });
